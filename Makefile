@@ -335,3 +335,15 @@ endif
 
 print-%:
 	@echo '$*=$($*)'
+
+.PHONY: debug test
+debug:
+	cgdb -x ./tools/.gdbinit-arm32 -args ./build/qemu-system-arm \
+		-M musca-a -nographic \
+		-d cpu,int,guest_errors,unimp,in_asm \
+		--device loader,file=../../prebuilt_image/ota_boot1.bin,addr=0xC000000
+
+test:
+	cgdb -x ./tools/.gdbinit-arm32 -args ./build/qemu-system-arm \
+		-M musca-a \
+		-deviceloader,file=../../prebuilt_image/otaboot1.bin,addr=0xC000000

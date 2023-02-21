@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.def": "c",
+        "help-texts.h": "c",
+        "units.h": "c",
+        "osdep.h": "c",
+        "cpu-common.h": "c",
+        "datadir.h": "c"
+    }
+}
