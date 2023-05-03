@@ -442,6 +442,26 @@ static void mps2_common_init(MachineState *machine)
     }
     create_unimplemented_device("i2s", 0x40024000, 0x400);
 
+
+    DeviceState *dev = qdev_new("debug-dev");
+    sysbus_realize(SYS_BUS_DEVICE(dev), &error_fatal);
+    sysbus_mmio_map(SYS_BUS_DEVICE(dev), 0, 0x50000000);
+
+    MemoryRegion *new_region;
+    new_region = g_malloc(sizeof(MemoryRegion));
+    memory_region_init_ram(new_region, NULL, "my_device_remap_a", 0x1000, &error_fatal);
+    memory_region_add_subregion(get_system_memory(), 0x60000000, new_region);
+
+
+    new_region = g_malloc(sizeof(MemoryRegion));
+    memory_region_init_ram(new_region, NULL, "my_device_remap_b", 0x1000, &error_fatal);
+    memory_region_add_subregion(get_system_memory(), 0x60001000, new_region);
+
+    uint32_t m1 = 0x1234, m2 = 0x4567;
+
+    cpu_physical_memory_write(0x60000000, &m1, 4);
+    cpu_physical_memory_write(0x60001000, &m2, 4);
+
     /* In hardware this is a LAN9220; the LAN9118 is software compatible
      * except that it doesn't support the checksum-offload feature.
      */
